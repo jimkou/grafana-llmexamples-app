@@ -30,6 +30,7 @@ The Grafana container in docker-compose is provisioned with the `grafana-llm-app
 This plugin makes use of the `@grafana/experimental` package to make requests to OpenAI via the `grafana-llm-app` plugin, which provides an authenticating proxy and handles streaming responses using Grafana Live.
 
 Take a look at `src/pages/ExamplePage.tsx` to see how to make requests and use responses. You can also take a look at `extensions/panelExplainer.tsx` to see how to add a [plugin extension] utilizing the same APIs.
+You can also add the new `GPT Query Panel` from `src/gpt-panel` to ask questions directly from a dashboard.
 
 You can also toggle the value of `disabled` for the `grafana-llm-app` plugin in `provisioning/plugins/apps.yaml` to see what happens when the LLM plugin is unavailable.
 
