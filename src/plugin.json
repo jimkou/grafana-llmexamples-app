@@ -3,6 +3,7 @@
   "type": "app",
   "name": "LLM Examples",
   "id": "grafana-llmexamples-app",
+  "module": "./module",
   "backend": true,
   "streaming": true,
   "executable": "gpx_llmexamples",

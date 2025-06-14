@@ -15,6 +15,9 @@ Then run the following to build the plugin:
     npm install
     npm run dev
 
+If Grafana logs warn about a missing `module.js`, make sure the plugin has been
+built with `npm run dev` (or `npm run build`).
+
 Finally, use docker compose to run a Grafana instance with access to the plugin:
 
     docker compose up
