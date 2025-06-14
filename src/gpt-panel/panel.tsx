@@ -3,7 +3,6 @@ import { PanelProps } from '@grafana/data';
 import { llms } from '@grafana/experimental';
 import { Button, Input, Spinner } from '@grafana/ui';
 import { useAsync } from 'react-use';
-import { getDashboardSrv, getBackendSrv } from '@grafana/runtime';
 
 interface Props extends PanelProps<{}> {}
 
@@ -22,14 +21,15 @@ export function GptPanel({ data }: Props) {
       return { enabled };
     }
 
-    let context = '';
-    try {
-      const dashboard = getDashboardSrv().getCurrent();
-      const dashJson = await getBackendSrv().get(`/api/dashboards/uid/${dashboard?.uid}`);
-      context = JSON.stringify(dashJson.dashboard.panels?.slice(0, 3));
-    } catch (err) {
-      console.error('failed getting dashboard context', err);
-    }
+    const context = JSON.stringify(
+      data.series?.map((series) => {
+        const values = series.fields[0].values.toArray();
+        return {
+          name: series.name ?? series.fields[0].name,
+          lastValues: values.slice(-5),
+        };
+      }) ?? []
+    );
 
     const response = await llms.openai.chatCompletions({
       model: 'gpt-3.5-turbo',
@@ -40,7 +40,7 @@ export function GptPanel({ data }: Props) {
     });
     setReply(response.choices[0].message.content);
     return { enabled };
-  }, [message]);
+  }, [message, data]);
 
   return (
     <div style={{ padding: '8px' }}>
