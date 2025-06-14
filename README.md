@@ -15,6 +15,14 @@ Then run the following to build the plugin:
     npm install
     npm run dev
 
+To start the backend portion of the plugin, compile the Go code into the `dist`
+folder:
+
+    GOOS=linux GOARCH=amd64 go build -o dist/gpx_llmexamples_linux_amd64 ./pkg
+
+If Grafana logs warn about a missing `module.js`, make sure the plugin has been
+built with `npm run dev` (or `npm run build`).
+
 Finally, use docker compose to run a Grafana instance with access to the plugin:
 
     docker compose up
@@ -30,6 +38,7 @@ The Grafana container in docker-compose is provisioned with the `grafana-llm-app
 This plugin makes use of the `@grafana/experimental` package to make requests to OpenAI via the `grafana-llm-app` plugin, which provides an authenticating proxy and handles streaming responses using Grafana Live.
 
 Take a look at `src/pages/ExamplePage.tsx` to see how to make requests and use responses. You can also take a look at `extensions/panelExplainer.tsx` to see how to add a [plugin extension] utilizing the same APIs.
+You can also add the new `GPT Query Panel` from `src/gpt-panel` to ask questions directly from a dashboard. When sending the prompt to the LLM, the panel summarizes the latest values from any data it receives so the answer can include recent dashboard context.
 
 You can also toggle the value of `disabled` for the `grafana-llm-app` plugin in `provisioning/plugins/apps.yaml` to see what happens when the LLM plugin is unavailable.
 
