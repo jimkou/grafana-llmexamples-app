@@ -3,6 +3,7 @@
   "type": "panel",
   "name": "GPT Query Panel",
   "id": "grafana-gpt-query-panel",
+  "module": "./module",
   "info": {
     "keywords": ["panel"],
     "description": "Ask GPT questions and show answers inline",

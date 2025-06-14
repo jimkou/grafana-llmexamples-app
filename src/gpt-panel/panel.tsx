@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PanelProps } from '@grafana/data';
+import { PanelProps, FieldType } from '@grafana/data';
 import { llms } from '@grafana/experimental';
 import { Button, Input, Spinner } from '@grafana/ui';
 import { useAsync } from 'react-use';
@@ -21,12 +21,25 @@ export function GptPanel({ data }: Props) {
       return { enabled };
     }
 
+    const now = Date.now();
     const context = JSON.stringify(
       data.series?.map((series) => {
-        const values = series.fields[0].values.toArray();
+        const timeField = series.fields.find((f) => f.type === FieldType.time);
+        const valueField = series.fields.find((f) => f.type !== FieldType.time);
+        const recent: any[] = [];
+        if (timeField && valueField) {
+          for (let i = timeField.values.length - 1; i >= 0; i--) {
+            const ts = timeField.values.get(i) as number;
+            if (now - ts <= 5 * 60 * 1000) {
+              recent.unshift(valueField.values.get(i));
+            } else {
+              break;
+            }
+          }
+        }
         return {
-          name: series.name ?? series.fields[0].name,
-          lastValues: values.slice(-5),
+          name: series.name ?? valueField?.name,
+          lastValues: recent.slice(-5),
         };
       }) ?? []
     );
