@@ -15,6 +15,11 @@ Then run the following to build the plugin:
     npm install
     npm run dev
 
+To start the backend portion of the plugin, compile the Go code into the `dist`
+folder:
+
+    GOOS=linux GOARCH=amd64 go build -o dist/gpx_llmexamples_linux_amd64 ./pkg
+
 If Grafana logs warn about a missing `module.js`, make sure the plugin has been
 built with `npm run dev` (or `npm run build`).
 
